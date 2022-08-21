@@ -33,6 +33,8 @@ Route::get('/controlPanel', function(){
     else return Redirect::to('/');
 });
 
+Route::get('/look', [UserController::class, 'look']);
+
 Route::get('/logout', function(){
    Session::flush();
    Auth::logout();
@@ -50,17 +52,24 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
 });
 
-Route::post('/user/edit/name', function(\http\Env\Request $request){
-
+Route::post('/{id}/edit/name', function($id){
+echo $id;
 });
-Route::post('/user/edit/email', function(\http\Env\Request $request){
-
+Route::post('/{id}/edit/email', function($id){
+    echo $id;
 });
-Route::post('/user/edit/url', function(\http\Env\Request $request){
-
+Route::post('/{id}/edit/url', function($id){
+    echo $id;
 });
-Route::post('/user/delete', function(\http\Env\Request $request){
+Route::post('/{id}/edit/password', function($id){
+    echo $id;
+});
 
+Route::post('/{id}/delete', function($id){
+    if (auth()->user()->name == $id){
+        UserController::destroy($id);
+    }
+    return Redirect::to('/');
 });
 
 

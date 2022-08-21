@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
+use PhpParser\Node\Stmt\Return_;
 use Symfony\Component\Console\Input\Input;
 
 
@@ -163,5 +164,13 @@ class UserController extends Controller
             return Redirect::to('admin/user');
         else
             return Redirect::to('/');
+    }
+
+    public function look(){
+        $data = User::inRandomOrder()
+            ->where('isActive', true)
+            ->limit(1)
+            ->get();
+        return Redirect::to($data[0]->url);
     }
 }

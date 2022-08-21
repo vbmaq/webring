@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
+//Route::get('/test', [UserController::class, 'inspect']);
+
 Route::get('/', function () {
     return view('home');
 })->name('home');
@@ -37,8 +39,6 @@ Route::get('/controlPanel', function(){
 });
 
 Route::get('/look', [UserController::class, 'look']);
-
-Route::get('/inspect', [UserController::class, 'inspect']);
 
 Route::get('/logout', function(){
    Session::flush();

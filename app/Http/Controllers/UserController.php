@@ -134,7 +134,6 @@ class UserController extends Controller
             $user->name       = $request->get('name');
             $user->email      = $request->get('email');
             $user->url = $request->get('url');
-
             $user->save();
 
             // redirect
@@ -261,9 +260,11 @@ class UserController extends Controller
             $body = substr($response, $header_size);
             if (!$this->checkForURL($body)){
                 $currentUser->isActive=false;
+//                echo $currentUser->name . " is not active";
             }
             else {
                 $currentUser->isActive=true;
+//                echo $currentUser->name . " is active";
             }
         }
         $currentUser->save();

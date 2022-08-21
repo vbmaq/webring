@@ -50,7 +50,7 @@
     </div>
 
 
-    {{ Form::submit('Create the shark!', array('class' => 'btn btn-primary')) }}
+    {{ Form::submit('Create User!', array('class' => 'btn btn-primary')) }}
 
     {{ Form::close() }}
 

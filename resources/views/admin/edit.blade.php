@@ -20,18 +20,24 @@
         {{ Form::email('email', null, array('class' => 'form-control')) }}
     </div>
 
-    <div class="form-group">
-        {{ Form::label('password', 'Password') }}
-        {{ Form::password('password', array('class' => 'form-control')) }}
-        {{ Form::password('password_confirmation', array('class' => 'form-control')) }}
-    </div>
+{{--    <div class="form-group">--}}
+{{--        {{ Form::label('password', 'Password') }}--}}
+{{--        {{ Form::password('password', array('class' => 'form-control')) }}--}}
+{{--        {{ Form::password('password_confirmation', array('class' => 'form-control')) }}--}}
+{{--    </div>--}}
+
+{{--    <div class="form-group">--}}
+{{--        {{Form::label('resetPass', 'Reset Password?')}}--}}
+{{--        {{Form::checkbox('resetPass')}}--}}
+{{--    </div>--}}
+
 
     <div class="form-group">
         {{ Form::label('url', 'URL') }}
         {{ Form::text('url', null, array('class' => 'form-control')) }}
     </div>
 
-    {{ Form::submit('Edit the shark!', array('class' => 'btn btn-primary')) }}
+    {{ Form::submit('Edit User!', array('class' => 'btn btn-primary')) }}
 
     {{ Form::close() }}
 @stop

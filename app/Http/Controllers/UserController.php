@@ -119,7 +119,6 @@ class UserController extends Controller
         $rules = array(
             'name'       => 'required',
             'email'      => 'required|email',
-//            'password' => ['required', 'string', 'min:8', 'confirmed'],
         );
         $validator = Validator::make($request->all(), $rules);
 
@@ -130,10 +129,10 @@ class UserController extends Controller
                 ->withInput($request->except('password'));
         } else {
             // store
+
             $user = User::find($id);
             $user->name       = $request->get('name');
             $user->email      = $request->get('email');
-//            $user->password = $request->get('password');
             $user->url = $request->get('url');
 
             $user->save();
@@ -169,6 +168,10 @@ class UserController extends Controller
             }
             else {
                 $user->email = $request->get('email');
+                $user->email_verified_at = null;
+                $user->save();
+                $request->user()->sendEmailVerificationNotification();
+
             }
         }
 

@@ -234,33 +234,7 @@ class UserController extends Controller
             ->get();
 
         foreach ($data as $user){
-            $url = $user->url;
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-            curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-            curl_setopt($ch, CURLOPT_HEADER, 1);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            $response = curl_exec($ch);
-            $health = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            $currentUser = User::find($user->id);
-            if (!$health) {
-                $currentUser->isActive=false;
-            }
-            else {
-                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-                $body = substr($response, $header_size);
-                if (!$this->checkForURL($body)){
-                    $currentUser->isActive=false;
-                }
-                else {
-                    $currentUser->isActive=true;
-                }
-            }
-            $currentUser->save();
+            $this->inspectUser($user);
         }
     }
 

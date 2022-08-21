@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,10 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+Route::redirect('/home', '/');
+
+
+
 Route::get('/controlPanel', function(){
     if (Auth::check()){
         if (auth()->user()->type == 'user')
@@ -35,11 +40,14 @@ Route::get('/controlPanel', function(){
 
 Route::get('/look', [UserController::class, 'look']);
 
+Route::get('/inspect', [UserController::class, 'inspect']);
+
 Route::get('/logout', function(){
    Session::flush();
    Auth::logout();
    return redirect('/login');
 });
+
 
 Auth::routes(['verify' => true]);
 
@@ -52,17 +60,25 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
     Route::get('/user/home', [HomeController::class, 'index'])->name('user.home');
 });
 
+Route::post('/edit/submit', [UserController::class, 'updateUser']);
+//Route::post('/edit/submit', function(Request $request){
+//    echo $request->get('name');
+//    echo $request->get('email');
+//    echo $request->get('password');
+//    echo $request->get('url');
+//});
+
 Route::post('/{id}/edit/name', function($id){
-echo $id;
+ return view('user.editName');
 });
 Route::post('/{id}/edit/email', function($id){
-    echo $id;
+    return view('user.editEmail');
 });
 Route::post('/{id}/edit/url', function($id){
-    echo $id;
+    return view('user.editURL');
 });
 Route::post('/{id}/edit/password', function($id){
-    echo $id;
+    return view('user.editPassword');
 });
 
 Route::post('/{id}/delete', function($id){

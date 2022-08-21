@@ -144,7 +144,58 @@ class UserController extends Controller
             Session::flash('message', 'Successfully updated user!');
             return Redirect::to('admin/user');
         }
+    }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateUser(Request $request){
+        $user = User::find(auth()->user()->id);
+
+        if ($request->get('name')) {
+            $user->name = $request->get('name');
+        }
+        if ($request->get('email')) {
+            $rules = array(
+                'email'  => 'email',
+            );
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return Redirect::to('user/home')
+                    ->withErrors($validator)
+                    ->withInput($request->except('email'));
+            }
+            else {
+                $user->email = $request->get('email');
+            }
+        }
+
+        if ($request->get('password')){
+            $rules = array(
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            );
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return Redirect::to('user/home')
+                    ->withErrors($validator)
+                    ->withInput($request->except('password'));
+            }
+            else {
+                $user->password = bcrypt($request->get('password'));
+            }
+
+        }
+        if ($request->get('url')) {
+            $user->url = $request->get('url');
+            $this->inspectUser($user);
+        }
+
+        $user->save();
+        return Redirect::to('user/home');
     }
 
     /**
@@ -172,6 +223,82 @@ class UserController extends Controller
             ->limit(1)
             ->get();
         return Redirect::to($data[0]->url);
+    }
+
+    public function inspect(){
+        $data = User::inRandomOrder()
+            ->where([
+                'type' => 0,
+                ])
+            ->limit(5)
+            ->get();
+
+        foreach ($data as $user){
+            $url = $user->url;
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $response = curl_exec($ch);
+            $health = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            $currentUser = User::find($user->id);
+            if (!$health) {
+                $currentUser->isActive=false;
+            }
+            else {
+                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                $body = substr($response, $header_size);
+                if (!$this->checkForURL($body)){
+                    $currentUser->isActive=false;
+                }
+                else {
+                    $currentUser->isActive=true;
+                }
+            }
+            $currentUser->save();
+        }
+    }
+
+    public function inspectUser($user){
+        $url = $user->url;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $health = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $currentUser = User::find($user->id);
+        if (!$health) {
+            $currentUser->isActive=false;
+        }
+        else {
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $body = substr($response, $header_size);
+            if (!$this->checkForURL($body)){
+                $currentUser->isActive=false;
+            }
+            else {
+                $currentUser->isActive=true;
+            }
+        }
+        $currentUser->save();
+    }
+
+    public function checkForURL($body){
+        $url = '<a href="http://127.0.0.1:8000/">';
+        $url2 = '<a href="http://127.0.0.1:8000/look">';
+
+        return (str_contains($body, $url) && str_contains($body, $url2));
     }
 }
 

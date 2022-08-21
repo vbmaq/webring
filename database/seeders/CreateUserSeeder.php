@@ -18,21 +18,20 @@ class CreateUserSeeder extends Seeder
     public function run()
     {
         $users = [
-//            [
-//                'name'=>'Admin User',
-//                'email'=>'admin@itsolutionstuff.com',
-//                'type'=>1,
-//                'password'=> bcrypt('123456'),
-//                'url'=>'http://google.com',
-//            ],
-//            [
-//                'name'=>'Manager User',
-//                'email'=>'manager@itsolutionstuff.com',
-//                'type'=> 2,
-//                'password'=> bcrypt('123456'),
-//                'url'=>'http://yahoo.com',
-//            ],
-
+            [
+                'name'=>'Admin User',
+                'email'=>'admin@itsolutionstuff.com',
+                'type'=>1,
+                'password'=> bcrypt('123456'),
+                'url'=>'http://google.com',
+            ],
+            [
+                'name'=>'Manager User',
+                'email'=>'manager@itsolutionstuff.com',
+                'type'=> 2,
+                'password'=> bcrypt('123456'),
+                'url'=>'http://yahoo.com',
+            ],
             [
                 'name'=>Str::random(30),
                 'email'=>Str::random(30) . '@thing.com',

@@ -15,8 +15,6 @@ use Symfony\Component\Console\Input\Input;
 
 class UserController extends Controller
 {
-//    https://www.digitalocean.com/community/tutorials/simple-laravel-crud-with-resource-controllers
-
     /**
      * Display a listing of the resource.
      *
@@ -206,8 +204,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $shark = User::find($id);
-        $shark->delete();
+        $user = User::find($id);
+        $user->delete();
 
         // redirect
         Session::flash('message', 'Successfully deleted user!');
@@ -269,8 +267,10 @@ class UserController extends Controller
     }
 
     public function checkForURL($body){
-        $url = '<a href="http://127.0.0.1:8000/">';
-        $url2 = '<a href="http://127.0.0.1:8000/look">';
+//        $url = '<a href="http://127.0.0.1:8000/">';
+//        $url2 = '<a href="http://127.0.0.1:8000/look">';
+        $url = '<a href="' . config('app.url') . '">';
+        $url2 = '<a href="' . config('app.url') . 'look">';
 
         return (str_contains($body, $url) && str_contains($body, $url2));
     }

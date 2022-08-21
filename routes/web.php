@@ -26,8 +26,6 @@ Route::get('/', function () {
 
 Route::redirect('/home', '/');
 
-
-
 Route::get('/controlPanel', function(){
     if (Auth::check()){
         if (auth()->user()->type == 'user')
@@ -61,12 +59,7 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 });
 
 Route::post('/edit/submit', [UserController::class, 'updateUser']);
-//Route::post('/edit/submit', function(Request $request){
-//    echo $request->get('name');
-//    echo $request->get('email');
-//    echo $request->get('password');
-//    echo $request->get('url');
-//});
+
 
 Route::post('/{id}/edit/name', function($id){
  return view('user.editName');
@@ -83,7 +76,7 @@ Route::post('/{id}/edit/password', function($id){
 
 Route::post('/{id}/delete', function($id){
     if (auth()->user()->name == $id){
-        UserController::destroy($id);
+        (new App\Http\Controllers\UserController)->destroy(auth()->user()->id);
     }
     return Redirect::to('/');
 });

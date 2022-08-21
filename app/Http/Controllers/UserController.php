@@ -174,3 +174,4 @@ class UserController extends Controller
         return Redirect::to($data[0]->url);
     }
 }
+

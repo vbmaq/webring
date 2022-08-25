@@ -239,6 +239,11 @@ class UserController extends Controller
     }
 
     public function inspectUser($user){
+//      Possible scenarios:
+//        - user is ACTIVE && has    nav links on their page    -->     leave as is
+//        - user is ACTIVE && has NO nav links on their page    -->     set as NOT ACTIVE
+//        - user NOT ACTIVE                                     -->     check if page is active and nav links on page
+
         $url = $user->url;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
@@ -271,8 +276,6 @@ class UserController extends Controller
     }
 
     public function checkForURL($body){
-//        $url = '<a href="http://127.0.0.1:8000/">';
-//        $url2 = '<a href="http://127.0.0.1:8000/look">';
         $url = '<a href="' . config('app.url') . '">';
         $url2 = '<a href="' . config('app.url') . 'look">';
 
